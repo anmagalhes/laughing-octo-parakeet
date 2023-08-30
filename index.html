@@ -1,0 +1,1763 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <base target="_top" />
+
+    <!-- META -->
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- CSS -->
+
+    <!-- Materialize -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+
+    <!-- Bootstrap -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css">
+
+    <!-- Google Fonts and Material Icons -->
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+    <!-- DataTables -->
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/dt-1.10.21/datatables.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.3/css/jquery.dataTables.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/scroller/2.1.1/css/scroller.dataTables.min.css">
+
+    <!-- JS -->
+
+    <!-- jQuery -->
+    <!-- Including only once should be enough -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <!-- jQuery UI -->
+    <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
+
+    <!-- Bootstrap -->
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.bundle.min.js"></script>
+
+    <!-- DataTables -->
+    <script src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.js"></script>
+    <script src="https://cdn.datatables.net/scroller/2.1.1/js/dataTables.scroller.min.js"></script>
+
+    <!-- jsPDF -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+</head>
+
+<style>
+
+/* Estilos gerais */
+button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    background-color: green;
+    color: white;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s;
+}
+
+button:hover {
+    background-color: darkgreen;
+}
+
+/* Header */
+
+.header {
+    background-color: #43a04d;
+    color: white;
+    padding: 10px 0;
+    text-align: center;
+    font-size: 20px;
+    font-weight: 300;
+    letter-spacing: 1px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.header span {
+    color: #FFF8E1;
+    font-weight: 700;
+}
+    body {
+        padding: 2rem;
+        background-color: #f8f9fa;
+    }
+
+/* Estilos de formulários e botões */
+
+.form-control,
+.btn {
+    border-radius: 20px;
+}
+
+#filter {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 16px;
+    transition: 0.3s;
+}
+
+#filter:focus {
+    box-shadow: 0 0 8px rgba(72, 239, 128, 0.8);
+    outline: none;
+}
+
+#filter:hover {
+    background-color: #45a049;
+}
+
+#filter::placeholder {
+    color: white;
+    opacity: 1;
+}
+
+.btn-enhanced {
+    font-size: 1.2rem;
+    letter-spacing: 0.05em;
+    padding: 10px 20px;
+    transition: 0.3s;
+}
+
+.btn-enhanced:hover {
+    transform: scale(1.05);
+}
+
+.bg-success {
+    color: #ffffff;
+}
+
+/* Estilos de tabelas */
+.myTable {
+    white-space: nowrap;
+    max-height: 1000px; /* altura máxima para a div */      /* altura para cerca de 40 linhas */
+    overflow-y: auto; /* permite a rolagem vertical */
+    margin: 10px 0;
+    border-radius: 5px;
+    box-shadow: 0px 0px 20px rgba(0,0,0,0.15);
+}
+
+.myTable table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.table-responsive {
+    position: relative;
+    max-height: 1000px;  /* você pode ajustar essa altura conforme necessário */
+    overflow: auto;
+}
+
+.table th {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background-color: #fff;  /* isso é para garantir que o cabeçalho não seja transparente */
+    box-shadow: 0 2px 2px -1px rgba(0, 0, 0, 0.4); /* isso adiciona uma pequena sombra abaixo do cabeçalho */
+}
+
+
+.myTable th, .myTable td {
+    font-size: 12px;
+    padding: 2px 2px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+.myTable tr {
+    height: 20px; /* 12px (aproximadamente, para font-size) + 2*12px (padding) = 36px (aproximadamente) */
+}
+
+.myTable th {
+    background-color: #43a04d;
+    color: white;
+    user-select: none;
+}
+
+.myTable tbody tr {
+    transition: background-color 0.3s ease;
+}
+
+.myTable tbody tr:hover {
+    background-color: #f5f5f5;
+}
+
+.myTable tbody tr:last-child td {
+    border-bottom: none;
+}
+
+/* Styles for checkbox */
+
+.checkbox-material input[type="checkbox"] {
+    display: none;
+}
+
+.checkbox-material label {
+    color: rgba(0, 0, 0, 0.54);
+    cursor: pointer;
+    font-size: 24px;
+}
+
+.checkbox-material input[type="checkbox"]:checked + label {
+    color: #4CAF50;
+}
+
+.checkbox-material {
+    position: relative;
+    padding-left: 35px;
+    cursor: pointer;
+    font-size: 22px;
+    user-select: none;
+}
+
+.checkbox-material .checkmark {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 25px;
+    width: 25px;
+    background-color: #eee;
+    border-radius: 2px;
+}
+
+/* Modals */
+
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0,0,0,0.7);
+}
+
+.modal-content {
+    background-color: #fefefe;
+    margin: 15% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 50%;
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+}
+
+.modal-header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: green;
+    padding: 10px 20px;
+    color: white;
+    position: relative;
+}
+
+.modal-header h2 {
+    font-size: 20px;
+    margin: 0;
+}
+
+.modal-body {
+    padding: 20px;
+}
+
+.modal-footer {
+    padding: 10px 20px;
+    text-align: right;
+    border-top: 1px solid #eee;
+}
+
+/* Adicione aqui os estilos para ajustar o tamanho das colunas */
+
+/* Coluna do checkbox */
+#table td:nth-child(1), 
+#table th:nth-child(1) {
+    text-align: center;  /* Centralizar horizontalmente */
+    vertical-align: middle;  /* Centralizar verticalmente */
+}
+
+.editable-cell {
+    background-color: #FFD700; /* Uma cor de ouro como exemplo */
+    cursor: pointer; /* Indica que a célula é clicável */
+    border: 1px dashed #333; /* Adiciona uma borda tracejada para mais destaque */
+    padding: 5px 10px; /* Um pouco de padding para estilização */
+}
+
+.highlighted-cell {
+    background-color: #FFD700;  /* Esta é uma cor dourada, mas você pode alterar para a cor que desejar */
+}
+.highlighted-row {
+    background-color: #FFEB3B;  /* Esta é uma cor amarela, mas você pode alterar para a cor que desejar */
+}
+.checkbox-material input[type="checkbox"] {
+    display: none;
+}
+.checkbox-material label {
+    color: rgba(0, 0, 0, 0.54);
+    cursor: pointer;
+    font-size: 24px;
+}
+
+.checkbox-material input[type="checkbox"]:checked + label {
+    color: #4CAF50; /* você pode alterar a cor se quiser */
+}
+.checkbox-material {
+    position: relative;
+    padding-left: 35px;
+    cursor: pointer;
+    font-size: 22px;
+    user-select: none;
+}
+
+.checkbox-material input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+}
+.checkbox-material .checkmark {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 25px;
+    width: 25px;
+    background-color: #eee;
+    border-radius: 2px;
+}
+
+.checkbox-material:hover input ~ .checkmark {
+    background-color: #ccc;
+}
+
+.checkbox-material input:checked ~ .checkmark {
+    background-color: #43a04d;
+}
+
+.checkmark:after {
+    content: "";
+    position: absolute;
+    display: none;
+}
+
+.checkbox-material input:checked ~ .checkmark:after {
+    display: block;
+}
+
+.checkbox-material .checkmark:after {
+    left: 9px;
+    top: 5px;
+    width: 5px;
+    height: 10px;
+    border: solid white;
+    border-width: 0 3px 3px 0;
+    transform: rotate(45deg);
+}
+
+.highlighted {
+    background-color: #a8f4a2; /* Escolha a cor que preferir */
+}
+
+
+</style>
+
+</head>
+
+<body>
+    <!-- Ícone do menu e Menu lateral: Não alterado, mantive o seu código -->
+    <!-- Conteúdo Principal -->
+    <div class="header">
+        PROGRAMAÇÃO E CONTROLE DA PRODUÇÃO - PCP - <span> NOTH CROMO</span>
+    </div>
+
+    <div class="container">
+        <!-- Campos de entrada -->
+          <div class="row mt-4"> 
+               <!-- Campo Prazo de Lançamento -->
+              <div class="col-md-3">
+                   <label for="dataLancamento" class="custom-label">Data de Lançamento</label>
+                  <input id="dataLancamento" type="date" class="form-control" placeholder="Data de Lançamento">
+              </div>
+
+              <!-- Campo Data de Produção -->
+              <div class="col-md-3">
+                  <label for="dataProducao" class="custom-label">Data de Produção</label>
+                  <input id="dataProducao" type="date" class="form-control">
+              </div>
+
+              <!-- Campo Prazo de Entrega -->
+              <div class="col-md-3">
+                  <label for="dataPrazoEntrega" class="custom-label">Prazo de Entrega</label>
+                  <input id="dataPrazoEntrega" type="date" class="form-control">
+              </div>
+
+          </div>
+
+
+          <!-- Nova linha para os novos campos -->
+          <!-- Campos de entrada -->
+<div class="row mt-4">
+    <!-- Campo Número de Controle -->
+    <div class="col-md-3">
+        <label for="numeroControle" class="custom-label">Número de Controle"</label>
+        <!-- Campo de entrada com lista suspensa -->
+        <input id="numeroControle" type="text" class="form-control highlight-input" placeholder="Controle" list="numerosDeControle">
+    </div>
+
+    <!-- Campo Pedido -->
+    <div class="col-md-3">
+        <label for="inputPedido" class="custom-label">Pedido</label>
+        <input id="inputPedido" type="text" class="form-control" placeholder="Pedido">
+    </div>
+
+    <!-- Campo Orçamento -->
+    <div class="col-md-3">
+        <label for="inputOrcamento" class="custom-label">Orçamento</label>
+        <input id="inputOrcamento" type="text" class="form-control" placeholder="Orçamento">
+    </div>
+
+    <!-- Campo de seleção de Operação -->
+    <div class="col-md-3">
+        <label for="operacaoSelect" class="custom-label">Operação</label>
+        <select id="operacaoSelect" class="form-control">
+            <option value="">Selecione a operação...</option>
+            <!-- As opções serão inseridas dinamicamente via JavaScript -->
+        </select>
+    </div>
+
+</div>
+
+    <!-- Campo Observação -->
+    <div class="row mt-4">
+        <div class="col-md-12">
+            <label for="notes" class="custom-label">Observação:</label>
+            <textarea id="notes" class="form-control"></textarea>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="row mt-2">
+    <!-- Botão Editar SEQ com ícone -->
+<div class="col-md-2">
+    <button id="editRowsBtn" onclick="showEditModal()" class="btn btn-warning btn-block button-height" style="border-radius: 25px; display: flex; align-items: center; justify-content: center;">
+        <span class="material-icons" style="margin-right: 8px;">edit</span>
+        Editar SEQ
+    </button>
+</div>
+
+<!-- Botão GERA PDFs -->
+<div class="col-md-4">
+    <button id="seuBotaoId" onclick="generatePDFsForSelectedOperations()" class="btn btn-block button-height" style="background-color: #4CAF50; color: white; padding: 10px 20px; border: none; border-radius: 25px; cursor: pointer; display: flex; align-items: center; width: 100%;">
+        <span class="material-icons" style="margin-right: 8px;">cloud_download</span>
+        GERA PDFs
+    </button>
+</div>
+
+<!-- Botão Buscar Dados com ícone -->
+<div class="col-md-3">
+    <button class="btn waves-effect waves-light btn-enhanced btn-block button-height" style="border-radius: 25px; display: flex; align-items: center; justify-content: center;">
+        <span class="material-icons" style="margin-right: 8px;">search</span>
+        Buscar Dados
+    </button>
+</div>
+
+<!-- Botão Salvar com ícone -->
+<div class="col-md-2"> <!-- Ajustei para col-md-2 para torná-lo menor -->
+    <button class="btn waves-effect waves-light bg-success btn-enhanced btn-block button-height" style="border-radius: 25px; display: flex; align-items: center; justify-content: center;">
+        <span class="material-icons" style="margin-right: 8px;">save</span>
+        Salvar
+    </button>
+</div>
+
+  </div>
+
+  <div class="table-responsive myTable table-wrapper">
+    <table id="table" class="table myTable">
+        <thead>
+            <tr>
+                <th class="text-center table-header-with-filter">
+                    Dt.Entrada
+                    <select class="table-filter" data-column="1" id="dateFilterDropdown">
+                        <option value="">Todas</option>
+                        <!-- As opções serão preenchidas pelo JavaScript -->
+                    </select>
+                </th>
+                <th class="text-center table-header-with-filter">
+                    Orç
+                    <select class="table-filter" data-column="2" id="orcFilterDropdown">
+                        <option value="">Todas</option>
+                    </select>
+                </th>
+                <th class="text-center">Pedido</th>
+                <th class="text-center">Nº Controle</th>
+                <th class="text-center">SEQ</th>
+                <th class="text-center">Cliente</th>
+                <th class="text-center">Cód</th>
+                <th class="text-center">Qtd</th>
+                <th class="text-center">Op</th>
+                <th class="text-center">Desc Serviço/ Produto / Tarefa</th>
+                <th class="text-center">Observação </th>
+                <th class="text-center">Nota </th>
+                <th class="text-center">Dt Produção </th>
+                <th class="text-center">Prazo Entrega </th>
+                <th class="text-center">obs. Produção </th>
+                <th class="text-center" style="display: none;">Idnovastarefas</th>
+                <th class="text-center" style="display: none;">Id PCP</th>
+                <th class="text-center">
+                    <label class="checkbox-material">
+                        <input type="checkbox" id="selectAllCheckbox" >>
+                        <span class="checkmark"></span>
+                    </label>
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- As linhas serão preenchidas pelo JavaScript -->
+        </tbody>
+    </table>
+</div>
+</div> <!-- Fecha a linha -->
+
+<!-- Modal para edição da tabela -->
+<div id="editModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2>NorthCromo - Editar SEQ</h2>
+            <span class="close" onclick="closeEditModal()">&times;</span>
+        </div>
+        <div class="modal-body grid-container">
+            <div class="grid-item col-12">
+                <label>Escolha uma opção:</label>
+            </div>
+            <div class="grid-item col-3">
+                <label>
+                    <input type="radio" name="SEQOption" value="1">
+                    <span class="checkmark"></span>
+                    1
+                </label>
+            </div>
+            <div class="grid-item col-3">
+                <label>
+                    <input type="radio" name="SEQOption" value="2">
+                    <span class="checkmark"></span>
+                    2
+                </label>
+            </div>
+            <div class="grid-item col-3">
+                <label>
+                    <input type="radio" name="SEQOption" value="3">
+                    <span class="checkmark"></span>
+                    3
+                </label>
+            </div>
+            <div class="grid-item col-3">
+                <label>
+                    <input type="radio" name="SEQOption" value="4">
+                    <span class="checkmark"></span>
+                    4
+                </label>
+            </div>
+        </div>
+        <div class="modal-footer grid-container">
+            <div class="grid-item col-6 center-text">
+                <p>1 = prioridade do dia</p>
+                <p>2 = 1-2 dias de prazo</p>
+            </div>
+            <div class="grid-item col-6 center-text">
+                <p>3 = 3 dias acima de prazo</p>
+                <p>4 = Exceções, não sair na impressão</p>
+            </div>
+            <div class="grid-item col-12">
+                <button onclick="saveEditedSEQ()">Salvar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<select id="dateFilterDropdown">
+    <!-- As opções serão preenchidas pelo JavaScript -->
+</select>
+      <!--Lista supresa no campo  -->
+    <datalist id="numerosDeControle">
+          <!-- As opções serão adicionadas aqui pelo JavaScript -->
+    </datalist>
+
+    <div id="pdfLinksContainer" style="margin-top: 10px;"></div>
+    </div>
+
+
+<!--   TESTE VARIOS PDF            -->
+
+
+<!-- Contêiner para links PDF -->
+<div id="pdfLinksContainer"></div>
+
+<!-- Botão para gerar os PDFs das operações selecionadas
+<button id="seuBotaoId">Gerar PDFs das Operações Selecionadas</button> -->
+
+<!-- Botão PDF TESTE -->
+<div class="container">
+    <div id="linksContainer" class="row"></div>
+</div>
+
+
+<!-- AMOSTRAR QUE ESTA SENDO CARREGANDO A PAGINA  -->
+<div id="loadingDiv" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(255,255,255,0.8); z-index: 1000; display: none;">
+    <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">
+        <img src="path/to/loading.gif" alt="Loading..."/>
+        <p>Carregando...</p>
+    </div>
+</div>
+
+
+     <script>
+
+// REMOVE ESPAÇO E ASPA
+var numeroControle = document.getElementById('numeroControle').value.trim().replace(/"/g, '');
+
+var minhaUrl =
+      'https://script.google.com/macros/s/AKfycbysjlNsU8NZAzwUbcNPI9gbTpD7FZq98h5W5IItpad8bGtPT1J0zsuSuW7aQbjZDTTO/exec'
+    
+
+      // Funções de Inicialização
+// -------------------
+
+// INICIALIZAR A TELA FUNCIONANDO
+/*$(window).on('load resize', function() {
+    $('.myTable th').each(function(index) {
+        var tbodyColumn = $('.myTable tbody tr:first-child td').eq(index);
+        $(this).width(tbodyColumn.width());
+    });
+});
+
+*/
+window.onload = function() {
+    //hideLoading();  // Ocultar a animação de carregamento
+    
+    $('.myTable th').each(function(index) {  // Ajusta a largura das colunas
+        var tbodyColumn = $('.myTable tbody tr:first-child td').eq(index);
+        $(this).width(tbodyColumn.width());
+    });
+};
+
+// Mostrar animação de carregamento
+function showLoading() {
+    document.getElementById('loadingDiv').style.display = 'block';
+}
+
+// Ocultar animação de carregamento
+function hideLoading() {
+    document.getElementById('loadingDiv').style.display = 'none';
+}
+
+// Mostrar animação de carregamento assim que a página começar a carregar
+showLoading();
+
+// Função para retornar a data atual no formato YYYY-MM-DD
+function getDataAtual() {
+    const hoje = new Date();
+    const ano = hoje.getFullYear();
+    const mes = String(hoje.getMonth() + 1).padStart(2, '0'); // Os meses são de 0 a 11, então adicionamos 1 e preenchemos com um zero à esquerda, se necessário
+    const dia = String(hoje.getDate()).padStart(2, '0'); // Preenche com um zero à esquerda, se necessário
+
+    return `${dia}/${mes}/${ano}`;
+}
+
+// Define a data de hoje para o campo dataLancamento
+document.getElementById('dataLancamento').value = getDataAtual();
+
+// -------------------
+// Funções de Tabela
+// -------------------
+function renderTable(data) {
+    const table = document.getElementById('myTable');
+    const tbody = table.querySelector('tbody');
+    tbody.innerHTML = '';  // Limpa as linhas anteriores
+
+    data.forEach(rowData => {
+        const row = document.createElement('tr');
+        rowData.forEach(cellData => {
+            const cell = document.createElement('td');
+            cell.textContent = cellData;
+            row.appendChild(cell);
+        });
+
+        // Adiciona um checkbox a cada linha
+        const checkboxCell = document.createElement('td');
+        const checkbox = document.createElement('input');
+        checkbox.type = 'checkbox';
+        checkboxCell.appendChild(checkbox);
+        row.insertBefore(checkboxCell, row.firstChild);  // Insere o checkbox na primeira coluna
+
+        tbody.appendChild(row);
+    });
+}
+
+// SELECIONA A TABELA E FAZER AS EDIÇÕES
+var selectedIds = [];
+
+function showEditModal() {
+    // Limpe a lista de IDs selecionados
+    selectedIds = [];
+
+    // Encontre todos os checkboxes selecionados e colete os IDs
+    var checkboxes = document.querySelectorAll("input[type='checkbox']:checked");
+    checkboxes.forEach(function(checkbox) {
+        var row = checkbox.closest('tr');
+        var id = row.cells[15].innerText;
+        selectedIds.push(id);
+    });
+
+    
+    // Exibe os IDs coletados no console
+    console.log("IDs selecionados:", selectedIds);
+
+
+    if (selectedIds.length > 0) {
+        var modal = document.getElementById("editModal");
+        modal.style.display = "block";
+    } else {
+        alert("Por favor, selecione pelo menos uma linha para editar.");
+    }
+}
+
+function saveEditedSEQ() {
+    var newSEQ = document.getElementById("newSEQ").value;
+
+    // Chamada ao GAS para atualizar os valores na folha
+    google.script.run.withSuccessHandler(onUpdateSuccess).withFailureHandler(onUpdateFailure).updateSheet(selectedIds, newSEQ);
+
+    // Limpe a caixa de input
+    document.getElementById("newSEQ").value = "";
+    closeEditModal();
+}
+
+
+// FILTRA A TABELA
+function filterTable() {
+    var filter = document.getElementById('filterInput').value.toUpperCase();
+    var table = document.getElementById('table');
+    var trs = table.getElementsByTagName('tr');
+
+    for (var i = 1; i < trs.length; i++) { // Comece em 1 para pular o cabeçalho da tabela
+        var tds = trs[i].getElementsByTagName('td');
+        var showRow = false;
+
+        for (var j = 0; j < tds.length; j++) {
+            if (tds[j].innerHTML.toUpperCase().indexOf(filter) > -1) {
+                showRow = true;
+                break;
+            }
+        }
+
+        trs[i].style.display = showRow ? '' : 'none';
+    }
+}
+
+
+// -------------------
+// Funções de PDF
+// -------------------
+
+
+// DEIXAR AS LINHAS TABELA EDITAVEIS
+document.addEventListener('DOMContentLoaded', function() {
+    applyEditableCells();
+    applyRowStyle();
+});
+
+
+function getSelectedRowsData() {
+    console.log("getSelectedRowsData");
+    var selectedData = [];
+
+    var checkboxes = document.querySelectorAll("input[type='checkbox']:checked");
+    checkboxes.forEach(function(checkbox) {
+        var rowData = [];
+        var row = checkbox.closest('tr');
+        for (var i = 0; i < row.cells.length; i++) {
+            rowData.push(row.cells[i].innerText);
+        }
+        selectedData.push(rowData);
+    });
+    return selectedData;
+}
+
+// PARA QUANDO GERAR OS PDF
+function generatePDFsForSelectedOperations() {
+    console.log("generatePDFsForSelectedOperations");
+
+    var selectedData = getSelectedRowsData();
+    console.log(selectedData);
+
+    if (selectedData.length > 0) {
+        $.ajax({
+            type: "POST",
+            data: {
+            qualFuncao: "mainFunction",
+            selectedData: JSON.stringify(selectedData)
+        },
+        url: minhaUrl,
+        dataType: "json",  // Espera que o retorno seja em formato JSON
+    }).done(function(data) { // Se a resposta já for JSON, 'data' já será um objeto
+            console.log(data); 
+            if (data.success && Array.isArray(data.urls)) { // Verifique se o retorno é um array
+                onSuccessGeneratePDFs(data.urls);  // Chama sua função de sucesso aqui
+            } else {
+                console.error("Erro: Resposta inesperada do servidor.");
+                alert("Erro: Resposta inesperada do servidor.");
+            }
+        }).fail(function(jqXHR, textStatus, errorThrown) {
+            console.error("Erro na chamada AJAX:", textStatus, errorThrown);
+            console.log(jqXHR.responseText);
+            alert("Erro ao gerar os PDFs.");
+        });
+    } else {
+        alert("Por favor, selecione pelo menos uma operação para gerar o PDF.");
+    }
+}
+
+
+function onSuccessGeneratePDFs(data) {
+    console.log("Resposta recebida:", data);
+    console.log("Tipo da resposta:", typeof data);
+
+    // Extrair URLs da resposta
+    const urls = extractURLs(data);
+    
+    if (!urls || !urls.length) {
+        console.error("Não foi possível extrair URLs da resposta!");
+        alert("Erro: Resposta inesperada do servidor.");
+        return;
+    }
+
+    const linksContainer = document.getElementById('linksContainer');
+    if (!linksContainer) {
+        console.error("Elemento 'linksContainer' não encontrado!");
+        return;
+    }
+
+    let row;  // Declarando a variável aqui
+
+    urls.forEach((url, index) => {
+        // Cria uma nova linha para cada 2 links
+        if (index % 2 === 0) {
+            row = document.createElement('div');
+            row.className = 'row mt-2';
+            linksContainer.appendChild(row);
+        }
+
+        const col = document.createElement('div');
+        col.className = 'col-md-6';  // Ajustado para 3 colunas por linha
+
+        const linkElem = document.createElement('a');
+        linkElem.href = url;
+        linkElem.target = '_blank';
+        linkElem.innerHTML = '<i class="fas fa-file-pdf"></i> Abrir PDF';
+        linkElem.className = 'pdfLink d-block mb-2';
+
+        col.appendChild(linkElem);
+        row.appendChild(col);
+    });
+}
+
+// PDF POR OPERAÇÃO VARIOS
+function gerarPDF(data, operacao) {
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF();
+
+    // Aqui, adicione o código para inserir os dados no PDF...
+    // Por exemplo:
+    doc.text("Dados para a operação: " + operacao, 10, 10);
+
+    // Adicione mais detalhes conforme necessário
+
+    return doc.output('blob');
+}
+
+// PDF POR OPERAÇÃO VARIOS
+function imprimirPDF() {
+    $.ajax({
+        type: 'POST',
+        url: minhaUrl,
+        data: {
+            action: 'getPDFData'
+        },
+        success: function(data) {
+            const linksContainer = document.getElementById("pdfLinksContainer");
+            linksContainer.innerHTML = ''; // Limpar links antigos
+
+            for (let op of OPERATIONS_ORDER) {
+                const dadosSegmentados = data.filter(linha => linha[8] === op);
+                if (dadosSegmentados.length > 0) {
+                    const pdfBlob = gerarPDF(dadosSegmentados, op);
+                    const link = document.createElement('a');
+                    link.href = URL.createObjectURL(pdfBlob);
+                    link.download = op + "-" + obterDataAtual() + ".pdf";
+                    link.textContent = "Download PDF para operação: " + op;
+                    link.style.marginRight = '10px';
+            
+                    link.addEventListener('click', function() {
+                    setTimeout(() => {
+                        link.remove();
+                    }, 500);  // espera meio segundo antes de remover, para garantir que o download tenha começado
+                });
+
+                    linksContainer.appendChild(link);
+                }
+            }
+        },
+        error: function(err) {
+            console.error('Erro ao obter dados para PDF:', err);
+        }
+    });
+}
+
+// -------------------
+// Funções de AJAX
+// -------------------
+
+console.log("Antes da função coletarDadosDaInterface");
+// CAPTURA OS DADOS DOS INPUTS
+function coletarDadosDaInterface() {
+    var dataProducao = document.getElementById('dataProducao').value;
+    var dataPrazoEntrega = document.getElementById('dataPrazoEntrega').value;
+    var notes = document.getElementById('notes').value.trim();
+    var numeroControle = document.getElementById("numeroControle").value;
+
+    $.ajax({
+        type: 'POST',
+        data: {
+            qualFuncao: 'getDadosPorNumeroControles',
+            dataProducao: dataProducao,
+            dataPrazoEntrega: dataPrazoEntrega,
+            notes: notes,
+            numeroControle: numeroControle
+        },
+        url: minhaUrl,
+    }).done(function(responseData) {
+        // RESULTADO FRONT
+        try {
+            var data = JSON.parse(responseData);
+            popularTabela(data);
+        } catch (error) {
+            console.error("Erro ao analisar JSON:", error);
+        }
+        console.log("Depois da função coletarDadosDaInterface");
+    });
+}
+
+// INICIO DE VALIDAÇÃO 28.08.2023
+$(document).ready(function() {
+    // Mostrar animação de carregamento assim que a página começar a carregar
+     showLoading();
+    onPaginaCarregada();
+    setupEventListeners();
+
+    console.log("Documento carregado e pronto!");
+});
+
+
+// Função que será chamada quando o botão "Gerar Relatórios" for pressionado
+function iniciarProcesso() {
+    $.ajax({
+        type: 'POST',
+        data: {
+            qualFuncao: 'main'
+        },
+        url: minhaUrl,
+        success: function(data) {
+            console.log("Dados recebidos:", data);
+            popularTabela(data);
+        },
+        error: function(err) {
+            console.error("Erro:", err);
+        }
+    });
+}
+
+
+// REALIZAR O FILTRO COM AJAX
+function populainpuntControlNumbers(){
+  var dateFilterDropdown = document.getElementById("dateFilterDropdown").value;
+  $.ajax({
+    type: 'POST',
+    data: {
+      qualFuncao: 'matchedValues',
+      filtro: dateFilterDropdown,
+      
+    },
+    url: minhaUrl,
+  }).done(function (data) {
+    // RESULTADO FRONT
+    try {
+    var data = JSON.parse(data);
+} catch (error) {
+    console.error("Erro ao analisar JSON:", error);
+}
+   // popularTabela(data)
+
+    // Documentação:
+    // https://datatables.net/extensions/scroller/examples/initialisation/large_js_source.html
+
+  });
+};
+
+// CONTINUAR ENVIANDO DADOS PARA CHAT A PARTE DAQUI 28.08
+function popularTabela(data) {
+    if (!(data instanceof Array)) {
+        console.error("Dados recebidos na função popularTabela não são uma instância de Array:", data);
+        return;
+    }
+
+    console.log("Encontrado:", data);
+    console.log("Dados recebidos na função popularTabela:", data);
+
+    var tableBody = document.getElementById('table').getElementsByTagName('tbody')[0];
+    tableBody.innerHTML = ''; // Limpar dados antigos
+
+    if (!data || data.length === 0) {
+        alert("Número de controle não encontrado.");
+
+        var tr = document.createElement('tr');
+        var td = document.createElement('td');
+        td.setAttribute('colspan', '19'); // Ajuste o número de colunas aqui para 19 (17 colunas visíveis + 2 colunas ocultas)
+        td.textContent = 'Nenhum registro encontrado.';
+        tr.appendChild(td);
+        tableBody.appendChild(tr);
+    } else {
+        let uniqueDates = new Set();
+
+        data.forEach(function(row, rowIndex) {
+            uniqueDates.add(row[0]);
+            var tr = document.createElement('tr');
+            [
+                row[0], row[1], row[2], row[3], row[4],
+                row[5], row[6], row[7], row[8], row[9],
+                row[10], row[11], row[12], row[13], row[14],
+                row[15], row[16], row[17]  // Adicionadas duas novas colunas para Idnovastarefas e Id PCP
+            ].forEach(function(cellValue, cellIndex) {
+                var td = document.createElement('td');
+                td.textContent = cellValue;
+
+                // Se a célula é de Idnovastarefas ou Id PCP, oculte-a
+                if (cellIndex === 15 || cellIndex === 16) {
+                    td.style.display = "none";
+                }
+
+                tr.appendChild(td);
+            });
+
+            // Adicionando a célula de checkbox ao final de cada linha
+            const checkboxCell = tr.insertCell(17); 
+            checkboxCell.innerHTML = `
+                <div class="checkbox-material">
+                    <input type="checkbox" id="checkbox-${rowIndex}" class="row-checkbox">
+                    <label for="checkbox-${rowIndex}" class="material-icons">check_box_outline_blank</label>
+                </div>`;
+
+            checkboxCell.querySelector('input').addEventListener('change', function() {
+                const labelElement = this.nextElementSibling;
+                if (this.checked) {
+                    labelElement.textContent = 'check_box';
+                } else {
+                    labelElement.textContent = 'check_box_outline_blank';
+                }
+            });
+            tableBody.appendChild(tr);
+            console.log("Linha adicionada:", tr);
+        });
+        // Preenchendo o dropdown de filtragem com as datas únicas coletadas
+        populateFilterDropdown('dateFilterDropdown', Array.from(uniqueDates));
+
+                // Verificar o estado do checkbox do cabeçalho
+                //updateHeaderCheckboxState();
+
+        // Este trecho irá pegar todas as linhas da tabela e ordená-las
+        const rows = Array.from(tableBody.querySelectorAll('tr'));
+        rows.sort(function(rowA, rowB) {
+            const compareDt = compareDtProducao(rowA, rowB);
+            if (compareDt !== 0) return compareDt;
+
+            const compareSeqVal = compareSeq(rowA, rowB);
+            if (compareSeqVal !== 0) return compareSeqVal;
+
+            return compareOp(rowA, rowB);
+        });
+
+        // Aqui, nós inserimos as linhas ordenadas de volta na tabela
+        rows.forEach(row => tableBody.appendChild(row));
+    }
+}
+
+// CLASSIFICAÇÃO DA TABELA 
+
+// Função para comparar a coluna Dt Produção
+function compareDtProducao(a, b) {
+    const cellA = a.children[12].textContent.trim();
+    const cellB = b.children[12].textContent.trim();
+    
+    // Colocar "-" primeiro
+    if (cellA === "-" && cellB !== "-") return -1;
+    if (cellA !== "-" && cellB === "-") return 1;
+
+    // Se ambas são "-", não há diferença
+    if (cellA === "-" && cellB === "-") return 0;
+
+    const dateA = new Date(cellA);
+    const dateB = new Date(cellB);
+    
+    return dateA - dateB;
+}
+
+    function compareSeq(a, b) {
+    const cellA = a.children[4].textContent.trim();
+    const cellB = b.children[4].textContent.trim();
+
+    // Verificar se são números válidos
+    const isNumberA = !isNaN(cellA) && cellA !== "";
+    const isNumberB = !isNaN(cellB) && cellB !== "";
+
+    // Colocar vazio no final
+    if (cellA === "" && cellB !== "") return 1;
+    if (cellA !== "" && cellB === "") return -1;
+    if (cellA === "" && cellB === "") return 0;
+
+    // Se ambos são números, compara os números
+    if (isNumberA && isNumberB) {
+        return parseInt(cellA, 10) - parseInt(cellB, 10);
+    }
+
+    // Se A é um número e B não é, A vem primeiro
+    if (isNumberA && !isNumberB) return -1;
+
+    // Se B é um número e A não é, B vem primeiro
+    if (!isNumberA && isNumberB) return 1;
+
+    // Se nenhum deles é um número, considera-os como iguais
+    return 0;
+}
+
+// VARIVAVEL PARA CLASSIFICAR A TIPO DE OPERAÇÃO
+
+const OPERATIONS_ORDER = [
+    "DES", "COM", "CRO", "USI", "DEC", "FRE", "SOL", "BRU", "PRO", "FAB","CPR",     
+    "GAL", "INS", "ITE", "JAT", "KIT", "LCO", "LEN", "LIM", "OPE", "PC", 
+    "PER", "POL", "PTR", "TES", "VEM", "MON"
+];
+
+function compareOp(a, b) {
+    const cellA = a.children[8].textContent.trim();
+    const cellB = b.children[8].textContent.trim();
+
+    // Se forem iguais, retorne 0
+    if (cellA === cellB) return 0;
+
+    // Compare com base na ordem definida em OPERATIONS_ORDER
+    const indexA = OPERATIONS_ORDER.indexOf(cellA);
+    const indexB = OPERATIONS_ORDER.indexOf(cellB);
+
+    // Caso algum valor não seja encontrado na lista, considere-o como de menor prioridade
+    if (indexA === -1) return 1;
+    if (indexB === -1) return -1;
+
+    return indexA - indexB;
+}
+
+
+// FINAL DA CLASSIFICAÇÃO DA TABELA 
+function populateFilterDropdown(dropdownId, values) {
+    const dropdown = document.getElementById(dropdownId);
+    if (dropdown) { // Certifica-se de que o elemento existe
+        dropdown.innerHTML = ''; // Limpa as opções anteriores
+        values.forEach(value => {
+            let option = document.createElement('option');
+            option.value = value;
+            option.textContent = value;
+            dropdown.appendChild(option);
+        });
+    } else {
+        console.error("Dropdown não encontrado:", dropdownId);
+    }
+}
+
+// SELECIONAR CHECKBOX E LEVAR DADOS PARA O GAS
+document.querySelector("#table tbody").addEventListener('change', function(event) {
+    if(event.target.classList.contains('row-checkbox')) {
+        const checkbox = event.target;
+        const tr = checkbox.closest('tr');
+        const rowIndex = Array.from(tr.parentElement.children).indexOf(tr) + 1; // +1 porque os índices começam em 0
+        console.log("Número da linha:", rowIndex);
+        
+        const idCell = tr.children[16];
+        
+        if(checkbox.checked) {
+            console.log("ID selecionado:", idCell.textContent);
+            //sendDataToServer(idCell.textContent, "selected");
+        } else {
+            console.log("ID desmarcado:", idCell.textContent);
+           // sendDataToServer(idCell.textContent, "deselected");
+        }
+    }
+});
+
+function sendDataToServer(id, action) {
+    $.ajax({
+        type: 'POST',
+        data: {
+            url: minhaUrl,
+            qualFuncao: 'getDadosPorNumeroControles',
+            id: id,
+            action: action
+        },
+    }).done(function(data) {
+    // RESULTADO FRONT
+    try {
+        var data = JSON.parse(data);
+    } catch (error) {
+        console.error("Erro ao analisar JSON:", error);
+    }
+    console.log("Depois da função coletarDadosDaInterface");
+}).fail(function(jqXHR, textStatus, errorThrown) {
+    console.error("Erro na chamada AJAX:", textStatus, errorThrown);
+});
+
+}
+
+
+
+
+
+
+
+
+
+// CHAMADO LADO DO GAS
+function fetchDataAndPopulate() {
+    $.ajax({
+        type: 'POST',
+        data: {
+            qualFuncao: 'getDataForTable'
+        },
+        url: minhaUrl,
+        success: function(responseData) {
+            try {
+                var data = JSON.parse(responseData);
+                //popularTabela(data);
+            } catch (e) {
+                console.error("Erro ao analisar a resposta JSON:", e);
+            }
+        },
+        error: function(err) {
+            console.error(err);
+        }
+    });
+}
+
+// SALVA OS DADOS INPUNTS
+function salvarDadosNaFolha() {
+    var dadosInterface = coletarDadosDaInterface();
+
+    console.log(dadosInterface);
+
+    $.ajax({
+        type: 'POST',
+        data: {
+            qualFuncao: 'salvarDadosProgramacaoPCP',
+            dados: dadosInterface
+        },
+        url: minhaUrl,
+        success: function() {
+            alert("Dados salvos com sucesso!");
+        },
+        error: function(err) {
+            alert("Erro ao salvar dados: " + err.statusText);
+        }
+    });
+}
+
+// Callbacks para lidar com a resposta do GAS
+function onUpdateSuccess(response) {
+    alert("Atualizado com sucesso!");
+    // Aqui, você pode adicionar código para atualizar sua tabela no lado do cliente se necessário.
+}
+
+function onUpdateFailure(error) {
+    alert("Erro ao atualizar: " + error);
+}
+
+
+function closeEditModal() {
+    var modal = document.getElementById("editModal");
+    modal.style.display = "none";
+}
+
+// DATA
+function formatDate(dateObj) {
+    var day = String(dateObj.getDate()).padStart(2, '0');
+    var month = String(dateObj.getMonth() + 1).padStart(2, '0'); // Os meses são de 0 a 11, então adicionamos 1
+    var year = dateObj.getFullYear();
+
+    return `${day}/${month}/${year}`;
+}
+
+function clientTestFunction() {
+    var testNumeroControle = '0009-23';  // Use o mesmo valor que funcionou no teste do servidor
+
+    console.log("Testando com número de controle:", testNumeroControle);
+
+    google.script.run
+        .withSuccessHandler(function(data) {
+            console.log("Data recebida:", data);
+        })
+        .withFailureHandler(function(error) {
+            console.error("Erro:", JSON.stringify(error));
+        })
+        .getDadosPorNumeroControle(testNumeroControle);
+}
+
+  function openPDF(url) {
+    window.open(url, '_blank');
+  }
+
+   function generatePDF(dataUsuario) {
+    google.script.run.withSuccessHandler(function(data) {
+        if (data.link) {
+            window.open(data.link, '_blank');
+        } else if (data.error) {
+            alert("Erro: " + data.error);
+        }
+    }).withFailureHandler(function(error) {
+        console.error('Erro ao fazer requisição:', error);
+    }).generatePDF(dataUsuario);
+}
+
+
+function generatePDF(dataUsuario) {
+    google.script.run.withSuccessHandler(function(data) {
+        if (data.link) {
+            window.open(data.link, '_blank');
+        } else if (data.error) {
+            alert("Erro: " + data.error);
+        }
+    }).withFailureHandler(function(error) {
+        console.error('Erro ao fazer requisição:', error);
+    }).generatePDF(dataUsuario);
+}
+
+function generateMultiplePDFs(operations) {
+    google.script.run.withSuccessHandler(function(data) {
+        if (data.links && Array.isArray(data.links)) {
+            data.links.forEach(link => {
+                window.open(link, '_blank');
+            });
+        } else if (data.error) {
+            alert("Erro: " + data.error);
+        }
+    }).withFailureHandler(function(error) {
+        console.error('Erro ao fazer requisição:', error);
+    }).generateMultiplePDFs(operations);
+}
+
+
+//Parece uma função para uso na interface da Web, pois interage com elementos da página e caixas de seleção. Esta função obtém operações selecionadas e chama outra função GAS para gerar PDFs para essas operações.
+/*function generatePDFsForSelectedOperations() {
+  console.log('Botão foi clicado!'); 
+  const rows = document.querySelectorAll('#table tbody tr');
+  const selectedRowsData = [];  // Vamos guardar os dados completos aqui
+
+  rows.forEach(row => {
+      const checkbox = row.querySelector('.row-checkbox');
+      if (checkbox && checkbox.checked) {
+          // Pega todos os dados dessa linha
+          const rowData = Array.from(row.children).map(cell => cell.textContent.trim());
+          selectedRowsData.push(rowData);
+      }
+  });
+  if (selectedRowsData.length > 0) {
+    // Usando AJAX para enviar os dados para o GAS
+    $.ajax({
+            type: 'POST',
+            data: {
+                qualFuncao: 'mainFunction',
+                operacoes: selectedRowsData
+            },
+            url: minhaUrl  // Garanta que "minhaUrl" está definida em algum lugar no seu código
+        }).done(function(response) {
+            try {
+                var data = JSON.parse(response);
+                console.log('PDFs gerados com sucesso:', data);
+                // Aqui você pode adicionar mais lógica se quiser fazer algo com os dados retornados.
+            } catch (e) {
+                console.error("Erro ao analisar os dados:", e);
+            }
+        })
+        .fail(function(error) {
+            console.error('Erro ao gerar PDFs:', error);
+        });
+    } else {
+        alert("Por favor, selecione pelo menos uma operação para gerar o PDF.");
+    }
+}
+
+function onErrorGeneratePDFs(error) {
+    console.error("Erro ao gerar os PDFs:", error);
+}
+*/
+// AMOSTRAR OS PDF GERADOS LADO DO CLIENTE
+function extractURLs(text) {
+    const regex = /(https:\/\/drive\.google\.com\/[^, ]+)/g;
+    const urls = [];
+    let match;
+
+    while (match = regex.exec(text)) {
+        urls.push(match[1]);
+    }
+
+    return urls;
+}
+
+
+function applyEditableCells() {
+    document.querySelectorAll("table tbody tr").forEach(row => {
+        ["td:nth-child(2)", "td:nth-child(3)", "td:nth-child(5)", "td:nth-child(10)", "td:nth-child(15)", "td:nth-child(13)", "td:nth-child(14)"].forEach(selector => {
+            const cell = row.querySelector(selector);
+            if(cell) {
+                cell.classList.add('editable-cell'); // Indica que a célula é editável
+                cell.addEventListener('click', function() {
+                    convertCellToInput(cell);
+                });
+            }
+        });
+    });
+}
+
+function convertCellToInput(cell) {
+    const originalValue = cell.textContent;
+    cell.originalValue = originalValue; // Guardar valor original para reverter se necessário
+
+    // Destaque a célula e a linha
+    cell.classList.add('highlighted-cell');
+    cell.parentElement.classList.add('highlighted-row');
+
+    cell.innerHTML = `<input type="text" value="${originalValue}" />`;
+    const input = cell.querySelector('input');
+    input.focus();
+
+    // Remover o listener antigo para evitar conflitos
+    cell.removeEventListener('click', function() {
+        convertCellToInput(cell);
+    });
+
+    input.addEventListener('blur', function() {
+    saveCellValue(cell, input.value);
+});
+}
+
+function saveCellValue(cell, value) {
+    if (!value.trim()) {
+        value = cell.originalValue;
+    }
+    cell.innerHTML = value;
+
+    // Remova o destaque da célula e da linha
+    cell.classList.remove('highlighted-cell');
+    cell.parentElement.classList.remove('highlighted-row');
+
+    // Re-ativar o event listener para edição
+    cell.addEventListener('click', function() {
+        convertCellToInput(cell);
+    });
+    // Colorindo a linha de vermelho
+    cell.parentElement.style.color = "red";
+}
+
+function applyRowStyle() {
+    document.querySelectorAll("table tbody tr").forEach(row => {
+        const productionDateCell = row.querySelector("td:nth-child(13)");
+        if (productionDateCell && productionDateCell.textContent.trim() !== "-") {
+            row.style.backgroundColor = "red";
+            row.style.color = "white";
+        }
+    });
+}
+
+
+// ---------- Funções de inicialização ----------
+
+function onPaginaCarregada() {
+    console.log("Inicializando a página...");
+    // Mostrar animação de carregamento assim que a página começar a carregar
+    showLoading();
+    fetchAndPopulateControlNumbers();
+    buscarDadosIniciaisConferenciaProgramacao();
+    populateOperations();
+    populainpuntControlNumbers();
+    hideLoading();  // Ocultar a animação de carregamento APÓS preencher a tabela
+
+}
+
+function setupEventListeners() {
+    console.log("Configurando ouvintes de eventos...");
+
+    // Aqui, ao usar jQuery, 'on' é equivalente ao 'addEventListener' do JavaScript puro.
+    $("#selectAllCheckbox").on("change", toggleAllCheckboxes);
+    
+    // Você pode adicionar quaisquer outros listeners que precisar aqui.
+    $("#numeroControle, #inputPedido, #operacaoSelect, #inputOrcamento").on("input", filterTableByInput);
+}
+
+// ---------- Funções relacionadas a AJAX e manipulação de respostas ----------
+
+function fetchAndPopulateControlNumbers() {
+    console.log("Buscando números de controle...");
+
+    $.ajax({
+        type: 'POST',
+        data: { 
+            qualFuncao: 'matchedValues' 
+        },
+        url: minhaUrl, // Garanta que "minhaUrl" está definida em algum lugar no seu código
+        success: populateControlNumbers,
+        error: function(error) {
+            console.error("Erro ao buscar números únicos de controle:", error);
+        }
+    });
+}
+
+/**
+ * Manipula a resposta da chamada AJAX para os dados da conferência.
+ */
+ /**
+ * Manipula a resposta da chamada AJAX para os dados da conferência.
+ */
+function handleConferenciaResponse(response) {
+    try {
+        var data = JSON.parse(response);
+        console.log("Dados de conferência recebidos:", data);
+        
+        if (Array.isArray(data)) {
+            if(data.length > 0) {
+                processarDadosConferencia(data);
+            } else {
+                console.warn("A lista de dados de conferência está vazia.");
+            }
+        } else {
+            console.error("Os dados retornados não são válidos:", data);
+        }
+
+    } catch (e) {
+        console.error("Erro ao analisar a resposta:", response);
+    }
+}
+
+
+function processarDadosConferencia(dados) {
+    // Aqui, você pode processar os dados conforme necessário. Por exemplo:
+    dados.forEach(function(item) {
+        // Fazer algo com cada item, como adicionar a um elemento da página, etc.
+        console.log("Processando item:", item);
+        
+        // Se você quiser adicionar ao datalist "numerosDeControle":
+        var option = document.createElement('option');
+        option.value = item;
+        document.getElementById('numerosDeControle').appendChild(option);
+    });
+}
+
+/**
+ * Manipula erros das chamadas AJAX.
+ */
+ function handleAjaxError(jqXHR, textStatus, errorThrown) {
+    console.error("Erro AJAX:", textStatus, errorThrown);
+}
+
+/**
+ * Manipula a resposta da chamada AJAX para os números de controle.
+ */
+ function handleControlNumbersResponse(data) {
+    console.log("Dados recebidos em handleControlNumbersResponse:", data);
+
+    if (Array.isArray(data)) {
+        console.log("Os dados são uma array.");
+        if (data.every(item => typeof item === "string")) {
+            console.log("Todos os itens na lista são strings.");
+            // Chame a função para processar os dados aqui.
+        } else {
+            console.warn("Nem todos os itens na lista são strings.");
+        }
+    } else {
+        console.warn("Os dados não são uma array.");
+    }
+}
+
+/**
+ * Faz uma chamada AJAX para buscar dados iniciais de conferência de programação.
+ */
+ function buscarDadosIniciaisConferenciaProgramacao() {
+    $.ajax({
+        type: 'POST',
+        data: {
+            qualFuncao: 'conferenciaProgramacaoDadosIniciais'
+        },
+        url: minhaUrl
+    })
+    .done(function(response) {
+        try {
+            var data = JSON.parse(response);
+            console.log(data);
+            popularTabela(data);
+            applyEditableCells();
+            applyRowStyle();
+            hideLoading();  // Ocultar a animação de carregamento APÓS preencher a tabela
+        } catch (e) {
+            console.error("Erro ao analisar os dados:", e);
+        }
+    })
+    .fail(function(error) {
+        console.error("Erro ao buscar dados iniciais de conferência:", error);
+    });
+}
+
+// ---------- Funções de manipulação DOM ----------
+
+/**
+ 
+/**
+ * Popula o dropdown com operações.
+ */
+function populateOperations() {
+    console.log("Populando operações...");
+    const operationsSelect = $("#operacaoSelect");
+    const OPERATIONS_ORDER = [
+        "DES", "COM", "CRO", "USI", "DEC", "FRE", "SOL", "BRU", "PRO", 
+        "FAB", "CPR", "GAL", "KIT", "OPE", "PC",  "ESC", "PER", "POL", 
+        "PTR", "MON"
+    ];
+
+    OPERATIONS_ORDER.forEach(op => {
+        let option = $("<option>").val(op).text(op);
+        operationsSelect.append(option);
+    });
+}
+
+/**
+ * Filtra as linhas da tabela com base nos valores dos inputs.
+ */
+function filterTableByInput() {
+    console.log("Filtrando tabela...");
+    const numeroControle = $("#numeroControle").val().trim();
+    const pedido = $("#inputPedido").val() ? +$("#inputPedido").val() : null; 
+    const operacao = $("#operacaoSelect").val(); 
+    const orcamento = $("#inputOrcamento").val() ? +$("#inputOrcamento").val() : null;
+
+    const tableRows = $("table tbody tr");
+
+    tableRows.each(function() {
+        const $row = $(this);
+        const colNumeroControle = $row.find("td:nth-child(4)").text().trim();
+        const colPedido = +$row.find("td:nth-child(3)").text().trim();
+        const colOperacao = $row.find("td:nth-child(9)").text().trim();
+        const colOrcamento = +$row.find("td:nth-child(2)").text().trim();
+
+        if ((!numeroControle || colNumeroControle === numeroControle) &&
+            (!pedido || colPedido === pedido) &&
+            (!operacao || colOperacao === operacao) &&
+            (!orcamento || colOrcamento === orcamento)) {
+            $row.show();
+        } else {
+            $row.hide();
+        }
+    });
+}
+
+/**
+ * Popula os números de controle em um datalist.
+ */
+ function populateControlNumbers(data) {
+
+// Tentativa de analisar como JSON se os dados são uma string
+if (typeof data === 'string') {
+    try {
+        data = JSON.parse(data);
+    } catch (e) {
+        console.error("Erro ao analisar os dados:", e);
+        return;
+    }
+}
+
+// Verifique se os dados são uma instância de um Array
+if (!Array.isArray(data)) {
+    console.error("Dados recebidos na função populateControlNumbers não são uma instância de Array:", data);
+    return;
+}
+
+console.log("Populando datalist com números de controle...");
+var datalist = document.getElementById('numerosDeControle');
+datalist.innerHTML = ''; // Limpa qualquer opção anterior
+
+// Agora, usando a variável 'data' em vez de 'numbers'
+data.forEach(function(num) {
+    var option = document.createElement('option');
+    option.value = num;
+    datalist.appendChild(option);
+});
+}
+
+function updateHeaderCheckboxState() {
+    const checkboxes = document.querySelectorAll('.row-checkbox');
+    const allChecked = [...checkboxes].every(chk => chk.checked);
+    const someChecked = [...checkboxes].some(chk => chk.checked);
+    const headerCheckbox = document.getElementById('selectAllCheckbox');
+    
+    if (allChecked) {
+        headerCheckbox.checked = true;
+        headerCheckbox.indeterminate = false;
+    } else if (someChecked) {
+        headerCheckbox.checked = false;
+        headerCheckbox.indeterminate = true;
+    } else {
+        headerCheckbox.checked = false;
+        headerCheckbox.indeterminate = false;
+    }
+}
+
+
+function toggleAllCheckboxes() {
+    const masterCheckbox = document.querySelector("#selectAllCheckbox");
+    const checkboxes = document.querySelectorAll('.row-checkbox');
+    
+    for(let chk of checkboxes) {
+        chk.checked = masterCheckbox.checked;
+        toggleRowColor(chk); // Adicione esta linha
+    }
+    
+    updateHeaderCheckboxState();
+}
+
+
+
+function toggleRowColor(checkbox) {
+    let labelElement = checkbox.nextElementSibling;
+    if (checkbox.checked) {
+        checkbox.closest('tr').classList.add('highlighted');
+        labelElement.textContent = '✅'; // Caractere Unicode para o sinal de visto
+    } else {
+        checkbox.closest('tr').classList.remove('highlighted');
+        labelElement.textContent = '☐'; // Caractere Unicode para uma caixa vazia
+    }
+}
+
+
+
+
+    </script>
+</body>
+</html>
